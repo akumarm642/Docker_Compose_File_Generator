@@ -5,12 +5,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log("Connecting with:", {
-  user: process.env.DB_USERNAME,
-  pass: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  db: process.env.DB_NAME,
-});
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
