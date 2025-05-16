@@ -2,6 +2,7 @@ import express from 'express';
 import { AppDataSource } from './data-source';
 import authRoutes from './routes/auth.routes'; 
 import projectRoutes from './routes/project.routes'
+import composeRoutes from './routes/compose.routes'
 
 export const app = express();
 
@@ -18,6 +19,7 @@ AppDataSource.initialize()
 
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/compose', composeRoutes)
 
 //basic route
 app.get('/', (req,res)=>{

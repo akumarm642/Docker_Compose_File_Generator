@@ -40,6 +40,8 @@ export const updateProject =async ( req: Request & { userId?: string }, res: Res
     
     console.log('Updating project:', { name, config });
 
+
+
     project.name = name ?? project.name;
     project.config = config ?? project.config;
     await projectRepo.save(project);
