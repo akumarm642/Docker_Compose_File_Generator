@@ -1,5 +1,7 @@
 import express from 'express';
 import { AppDataSource } from './data-source';
+import authRoutes from './routes/auth.routes'; 
+import projectRoutes from './routes/project.routes'
 
 export const app = express();
 
@@ -13,6 +15,9 @@ AppDataSource.initialize()
 .catch((err)=>{
     console.error("Database connection failed", err);
 });
+
+app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
 
 //basic route
 app.get('/', (req,res)=>{

@@ -5,6 +5,8 @@ import {
     CreateDateColumn,
     UpdateDateColumn
   } from 'typeorm';
+import { OneToMany } from 'typeorm';
+import { Project } from './Project';
   
   @Entity()
   export class User {
@@ -22,5 +24,8 @@ import {
   
     @UpdateDateColumn()
     updatedAt!: Date;
+
+    @OneToMany(() => Project, (project) => project.user)
+    projects!: Project[];
   }
   
