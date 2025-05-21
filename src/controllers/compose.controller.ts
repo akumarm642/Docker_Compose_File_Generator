@@ -61,12 +61,12 @@ export const validateYaml = async (req: Request, res: Response) => {
 
         yaml.load(yamlText);
 
-        const formattedYaml = await prettier.format(yamlText, { parser: 'yaml'});
+        const formattedYaml = await prettier.format(yamlText, { parser: 'yaml' });
         console.log(formattedYaml)
-        return res.status(200).json({
-            message: 'YAML is valid',
-            formattedYaml,
-        });
+        res.setHeader('Content-Type', 'text/plain');
+        return res.status(200).send(
+            formattedYaml
+        );
     } catch (err: any){
         return res.status(400).json({
             message: 'Invalid YAML syntax',
