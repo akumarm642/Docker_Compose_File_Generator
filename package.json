@@ -20,7 +20,8 @@
     "pg": "^8.15.6",
     "prettier": "^3.5.3",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.23"
+    "typeorm": "^0.3.23",
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

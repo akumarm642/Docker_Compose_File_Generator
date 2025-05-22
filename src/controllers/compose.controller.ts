@@ -5,7 +5,40 @@ import prettier from 'prettier';
 import yaml from 'js-yaml';
 import multer from 'multer';
 import fs from 'fs';
-import { error, log } from 'console';
+import { parseDocument } from 'yaml';
+import { string } from 'yaml/dist/schema/common/string';
+
+//POST /compose/validate-syntax
+export const validateYamlSystax = (req: Request, res:Response) => {
+    const { yaml: yamlString } = req.body;
+
+    if(typeof yaml !== 'string' ){
+        return res.status(400).json({ message: "'yaml' must be a string"});
+    }
+
+    try{
+        const doc = parseDocument(yaml, { keepCstNodes: true } as any);
+
+        if(doc.errors.length>0){
+            //map errors to line number and message
+            console.log(doc.errors);
+            const errors = doc.errors.map(err => ({
+                line: Array.isArray(err.linePos) && err.linePos[0] ? err.linePos[0].line : null,
+                message: err.message
+            }));
+            console.log(errors);
+            return res.status(400).json({ errors });
+        }
+
+        res.json({ message: 'YAML is syntactically correct'});
+
+    } catch (err) {
+        //catch unexpected exceptions
+        const message = err instanceof Error ? err.message : String(err);
+        res.status(500).json({ message: 'Internal Server Error', error: message });
+    }
+};
+
 
 // POST /compose/validate
 export const validateConfig = (req: Request, res: Response) => {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { generateYaml, importYaml, validateConfig, validateYaml } from '../controllers/compose.controller';
+import { generateYaml, importYaml, validateConfig, validateYaml, validateYamlSystax } from '../controllers/compose.controller';
 import multer from 'multer';
 import { requireAuth } from '../middleware/auth.middleware';
 
@@ -12,5 +12,6 @@ router.post('/validate', validateConfig);
 router.post('/yaml', generateYaml);
 router.post('/import', upload.single('file'), importYaml);
 router.post('/validate-yaml', validateYaml);
+router.post('/validate-syntax', validateYamlSystax);
 
 export default router ;
