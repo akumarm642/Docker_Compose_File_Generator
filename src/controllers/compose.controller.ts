@@ -3,7 +3,9 @@ import { dump, load } from 'js-yaml';
 import { validateDockerComposeConfig } from '../utils/validateConfig';
 import prettier from 'prettier';
 import yaml from 'js-yaml';
-import { log } from 'console';
+import multer from 'multer';
+import fs from 'fs';
+import { error, log } from 'console';
 
 // POST /compose/validate
 export const validateConfig = (req: Request, res: Response) => {
@@ -33,21 +35,70 @@ export const generateYaml = (req: Request, res: Response) => {
     }
 };
 
-// POST /compose/import
-export const importYaml = (req: Request, res: Response) => {
-    //console.log('Request body:', req.body);
-    const { yaml } = req.body;
+//Configure multer for file upload
+const upload = multer({
+    dest: 'uploads/',
+    fileFilter: (req, file, cb) => {
+        if(file.mimetype === 'application/x-yaml' || file.mimetype === 'text/yaml' ||
+      file.mimetype === 'application/yaml' || file.originalname.endsWith('.yml') || file.originalname.endsWith('.yaml')){
+            cb(null, true);
+        } else {
+            cb(new Error('Only .yml and .yaml files are allowed'));
+        }
+    },
+})
 
-    try{
-        const config = load(yaml);
-        //console.log('YAML:', yaml);
-        //console.log('Config:', config);
-        res.json({ config })
-    } catch (err){
-        const message = (err instanceof Error) ? err.message : String(err);
-        res.status(400).json({ message: 'Failed to pass YAML', error: message });
+// POST /compose/import
+export const importYaml = [
+    // //console.log('Request body:', req.body);
+    // const { yaml } = req.body;
+
+    // try{
+    //     const config = load(yaml);
+    //     //console.log('YAML:', yaml);
+    //     //console.log('Config:', config);
+    //     res.json({ config })
+    // } catch (err){
+    //     const message = (err instanceof Error) ? err.message : String(err);
+    //     res.status(400).json({ message: 'Failed to pass YAML', error: message });
+    // }
+    async (req: Request, res: Response): Promise<void> => {
+        if(!req.file){
+            res.status(400).json({ message : 'No file uploaded'});
+            return;
+        }
+
+        try{
+            const filepath = req.file.path;
+            const rawyaml = fs.readFileSync(filepath, 'utf-8');
+            //parse yaml
+            const config = load(rawyaml);
+
+            //Format yaml using prettier
+            const formattedYaml = await prettier.format(rawyaml, { parser:'yaml'});
+
+            // Delete temp file, catch errors if any
+            try {
+              fs.unlinkSync(filepath);
+            } catch (err) {
+               console.error('Failed to delete temp file', err);
+            }
+
+            res.json({
+                message : "YAML file imported and validated Successfully",
+                formattedYaml,
+                config, 
+            });
+
+        } catch (err){
+            res.status(400).json({
+                message : 'Failed to parse YAML',
+                error : (err instanceof Error) ? err.message : String(err),
+            });
+        }
+
     }
-};
+];
 
 //POST /validate-yaml
 export const validateYaml = async (req: Request, res: Response) => {
