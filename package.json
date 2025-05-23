@@ -6,7 +6,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn src/server.ts",
     "debug": "node --inspect-brk -r ts-node/register src/app.ts"
-
   },
   "keywords": [],
   "author": "",
@@ -14,6 +13,7 @@
   "description": "",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "js-yaml": "^4.1.0",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.18",
     "@types/express": "^4.17.21",
     "@types/js-yaml": "^4.0.9",
     "@types/jsonwebtoken": "^9.0.9",
