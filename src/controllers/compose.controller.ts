@@ -9,34 +9,59 @@ import { parseDocument } from 'yaml';
 import { string } from 'yaml/dist/schema/common/string';
 
 //POST /compose/validate-syntax
-export const validateYamlSystax = (req: Request, res:Response) => {
-    const { yaml: yamlString } = req.body;
+export const validateYamlSyntaxAndIndentation = async (req: Request, res:Response) => {
+    const { yaml } = req.body;
 
     if(typeof yaml !== 'string' ){
         return res.status(400).json({ message: "'yaml' must be a string"});
+    }
+
+    const result = {
+        syntax: { valid: true, errors: [] as { message: string, line?: number }[] },
+        indentation: { valid: true, errors: [] as { message: string, line: number}[] },
     }
 
     try{
         const doc = parseDocument(yaml, { keepCstNodes: true } as any);
 
         if(doc.errors.length>0){
-            //map errors to line number and message
-            console.log(doc.errors);
-            const errors = doc.errors.map(err => ({
-                line: Array.isArray(err.linePos) && err.linePos[0] ? err.linePos[0].line : null,
-                message: err.message
+            result.syntax.valid = false;
+            result.syntax.errors = doc.errors.map((e: any) => ({
+                message: e.message,
+                line: e.linePos?.[0]?.line ?? undefined
             }));
-            console.log(errors);
-            return res.status(400).json({ errors });
+
         }
 
-        res.json({ message: 'YAML is syntactically correct'});
-
     } catch (err) {
-        //catch unexpected exceptions
-        const message = err instanceof Error ? err.message : String(err);
-        res.status(500).json({ message: 'Internal Server Error', error: message });
+        const message = (err instanceof Error) ? err.message : String(err);
+        result.syntax.valid = false;
+        result.syntax.errors.push({ message: message})
     }
+
+    //Custom indentation validation
+    const lines = yaml.split('\n');
+    const INDENT_SIZE = 2;
+    for (let i=0; i<lines.length; i++){
+        const line = lines[i];
+        if(line.trim() === '' || line.trim().startsWith('#')) continue;
+
+        const leadingSpaces = line.match(/^ */)?.[0].length ?? 0;
+        if(leadingSpaces % INDENT_SIZE !== 0){
+            result.indentation.valid = false;
+            result.indentation.errors.push({
+                line: i+1,
+                message: `Invalid Indentation. Expected a multiple of ${INDENT_SIZE} spaces`,
+            });
+        }
+    }
+
+    const isValid = result.syntax.valid && result.indentation.valid;
+
+    res.status(isValid ? 200 : 400).json({
+        message: isValid ? 'YAML is valid' : 'YAML has syntax or indentation issues',
+        result,
+    });
 };
 
 
