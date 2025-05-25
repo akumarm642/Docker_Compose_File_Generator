@@ -20,7 +20,7 @@ export const signup = async (req: Request, res: Response): Promise<Response> => 
         await userRepo.save(user);
 
         const token = generateToken(user.id);
-        return res.status(201).json({ token });
+        return res.status(201).json({ message: "Account Created Successfulyy", 'token':token });
     }catch(err){
         console.error(err);
         return res.status(500).json({ message:'signup failed'});
