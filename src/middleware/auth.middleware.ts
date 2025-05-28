@@ -8,11 +8,9 @@ interface AuthRequest extends Request {
 }
 
 export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
+    const token = req.cookies.token;
 
-    if(!authHeader) return res.status(401).json({ message: 'No auth token provided'});
-
-    const token = authHeader.split(' ')[1];
+    if(!token) return res.status(401).json({ message: 'No auth token provided'});
 
      try{
         const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };

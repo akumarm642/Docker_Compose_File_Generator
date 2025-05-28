@@ -2,9 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import { AppDataSource } from './data-source';
 import authRoutes from './routes/auth.routes'; 
-import projectRoutes from './routes/project.routes'
-import composeRoutes from './routes/compose.routes'
-import dockerhubRoutes from './routes/dockerhub.router'
+import projectRoutes from './routes/project.routes';
+import composeRoutes from './routes/compose.routes';
+import dockerhubRoutes from './routes/dockerhub.router';
+import cookieParser from 'cookie-parser';
+import { requireAuth } from './middleware/auth.middleware';
+import { requireProject } from './middleware/project.middleware';
 
 export const app = express();
 
@@ -12,6 +15,8 @@ app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true,
 }))
+
+app.use(cookieParser());
 
 // app.use(express.json());
 
@@ -34,6 +39,13 @@ AppDataSource.initialize()
 });
 
 app.use('/api/auth', authRoutes);
+app.use(requireAuth);
+
+import { selectProject } from './controllers/projectSession.controller';
+app.post('/api/projects/select', selectProject);
+
+app.use(requireProject);
+
 app.use('/api/projects', projectRoutes);
 app.use('/api/compose', composeRoutes);
 app.use('/api/dockerhub', dockerhubRoutes);

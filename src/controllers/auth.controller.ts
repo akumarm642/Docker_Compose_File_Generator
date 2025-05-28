@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
 import { generateToken } from '../utils/jwt';
+import { strict } from 'assert';
 
 const userRepo = AppDataSource.getRepository(User);
 
@@ -20,7 +21,7 @@ export const signup = async (req: Request, res: Response): Promise<Response> => 
         await userRepo.save(user);
 
         const token = generateToken(user.id);
-        return res.status(201).json({ message: "Account Created Successfulyy", 'token':token });
+        return res.status(201).json({ message: "Account Created Successfully", 'token':token });
     }catch(err){
         console.error(err);
         return res.status(500).json({ message:'signup failed'});
@@ -39,7 +40,15 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
         if(!valid) return res.status(400).json({ message: 'Invalid credentials' });
 
         const token = generateToken(user.id);
-        return res.status(201).json({ token });
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000
+        });
+
+        return res.status(201).json({ message: 'Login Successful' });
     } catch(err){
         console.error(err);
         return res.status(500).json({ message: 'Login failed' });

@@ -16,8 +16,11 @@ export class Project {
     @Column()
     name!: string;
 
-    @Column({ type: 'jsonb', default: {}})
-    config!: object;
+    @Column({ nullable: true})
+    description?: string;
+
+    @Column({ default: "active"})
+    status!: string
 
     @ManyToOne(()=> User, (user) => user.projects, { onDelete: 'CASCADE' })
     user!: User;

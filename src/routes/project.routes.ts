@@ -6,6 +6,7 @@ import {
     deleteProject
 } from '../controllers/project.controller';
 import { requireAuth } from '../middleware/auth.middleware';
+import { selectProject } from "../controllers/projectSession.controller";
 
 const router = Router();
 
