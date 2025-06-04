@@ -8,6 +8,7 @@ import dockerhubRoutes from './routes/dockerhub.router';
 import cookieParser from 'cookie-parser';
 import { requireAuth } from './middleware/auth.middleware';
 import { requireProject } from './middleware/project.middleware';
+import { setupSwagger } from './swagger'; // adjust path as needed
 
 export const app = express();
 
@@ -17,6 +18,8 @@ app.use(cors({
 }))
 
 app.use(cookieParser());
+
+setupSwagger(app);
 
 // app.use(express.json());
 
