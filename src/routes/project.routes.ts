@@ -18,25 +18,29 @@ const router = Router();
  */
 
 router.use(requireAuth);
-
 /**
  * @swagger
  * /api/projects:
  *   get:
- *     summary: List all projects
+ *     summary: Get all projects for the logged-in user
  *     tags: [Projects]
  *     security:
  *       - cookieAuth: []
  *     responses:
  *       200:
- *         description: List of projects retrieved successfully
+ *         description: Successfully retrieved projects for the authenticated user
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Project'
+ *       401:
+ *         description: Unauthorized - no valid authentication token provided
+ *       403:
+ *         description: Forbidden - invalid or expired token
  */
+
 
 /**
  * @swagger
@@ -140,9 +144,37 @@ router.use(requireAuth);
  *         description: Project deleted successfully
  */
 
-router.get('/', getProject);
+router.get('/', requireAuth, getProject);
 router.post('/', createProject);
 router.put('/:id', updateProject);
 router.delete('/:id', deleteProject);
+
+/**
+ * @swagger
+ * /api/projects/select:
+ *   post:
+ *     summary: Select a project for the session
+ *     description: Sets the current selected project for the user's session.
+ *     tags:
+ *       - Projects
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               projectId:
+ *                 type: string
+ *                 format: uuid
+ *                 example: 9d6ad5f5-06c2-4e5c-99c0-21cd38cd78a4
+ *                 description: ID of the project to select
+ *     responses:
+ *       200:
+ *         description: Project successfully selected
+ */
+router.post('/select', selectProject);
+
+
 
 export default router;

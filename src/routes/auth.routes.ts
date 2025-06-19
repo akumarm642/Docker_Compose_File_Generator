@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, signup } from '../controllers/auth.controller';
+import { login, signup, checkAuthStatus, logout } from '../controllers/auth.controller';
 
 const router = Router();
 
@@ -69,5 +69,42 @@ router.post('/signup', signup);
  *         description: Invalid credentials
  */
 router.post('/login', login);
+
+/**
+ * @swagger
+ * /api/auth/status:
+ *   get:
+ *     summary: Check user login status
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: User is logged in
+ *       401:
+ *         description: User is not logged in
+ */
+router.get('/status', checkAuthStatus);
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout user
+ *     description: Clears authentication and project cookies, effectively logging the user out.
+ *     tags:
+ *       - Authentication
+ *     responses:
+ *       200:
+ *         description: Successfully logged out
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Logged out successfully
+ */
+router.post('/logout', logout);
+
 
 export default router;

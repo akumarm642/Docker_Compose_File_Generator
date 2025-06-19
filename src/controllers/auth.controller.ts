@@ -4,7 +4,10 @@ import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
 import { generateToken } from '../utils/jwt';
 import { strict } from 'assert';
+import jwt from 'jsonwebtoken';
+import { verifyProjectToken } from '../utils/jwt';
 
+const JWT_SECRET = process.env.JWT_SECRET || 'your_default_jwt_secret';
 const userRepo = AppDataSource.getRepository(User);
 
 //POST /signup
@@ -53,4 +56,40 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
         console.error(err);
         return res.status(500).json({ message: 'Login failed' });
     }
+};
+
+//GET /is-user-logged-in
+export const checkAuthStatus = (req:Request, res:Response) => {
+    try{
+        const token = req.cookies.token;
+        const projectToken = req.cookies.projectId
+
+        if(!token){
+            return res.status(401).json({ loggedIn: false, message: 'No token provided'});
+        }
+
+        const decodedUser = jwt.verify(token, JWT_SECRET) as { id: string };
+
+        let decodedProject = null;
+        if (projectToken){
+            decodedProject = verifyProjectToken(projectToken);
+        }
+
+        return res.status(200).json({
+            loggedIn: true,
+            userId: decodedUser.id,
+            projectId: decodedProject?.projectId || null,
+        });
+    } catch (err){
+        return res.status(401).json({ loggedIn: false, message: 'Invalid or expired token'})
+    }
+}
+
+//POST /logout
+export const logout = (req: Request, res: Response) => {
+    // Clear both user and project tokens
+    res.clearCookie('token', { path: '/', httpOnly: true, secure: true, sameSite: 'none' });
+    res.clearCookie('projectId', { path: '/', httpOnly: true, secure: true, sameSite: 'none' });
+
+    return res.status(200).json({ message: 'Logged out successfully' });
 };

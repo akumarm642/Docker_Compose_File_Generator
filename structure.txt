@@ -1,0 +1,43 @@
+Folder PATH listing
+Volume serial number is 5AC8-20CC
+C:.
+�   .env
+�   .gitignore
+�   docker-compose.yml
+�   package-lock.json
+�   package.json
+�   tsconfig.json
+�   
+����src
+�   �   .gitignore
+�   �   app.ts
+�   �   data-source.ts
+�   �   server.ts
+�   �   
+�   ����controllers
+�   �       auth.controller.ts
+�   �       compose.controller.ts
+�   �       dockerhub.controller.ts
+�   �       project.controller.ts
+�   �       projectSession.controller.ts
+�   �       
+�   ����entities
+�   �       Project.ts
+�   �       User.ts
+�   �       
+�   ����middleware
+�   �       auth.middleware.ts
+�   �       project.middleware.ts
+�   �       
+�   ����routes
+�   �       auth.routes.ts
+�   �       compose.routes.ts
+�   �       dockerhub.router.ts
+�   �       project.routes.ts
+�   �       
+�   ����services
+�   �       auth.service.ts
+�   �       
+�   ����utils
+�           jwt.ts
+�           validateConfig.ts

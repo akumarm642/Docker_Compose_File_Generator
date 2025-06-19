@@ -44,11 +44,9 @@ AppDataSource.initialize()
 app.use('/api/auth', authRoutes);
 app.use(requireAuth);
 
-import { selectProject } from './controllers/projectSession.controller';
-app.post('/api/projects/select', selectProject);
 
 app.use(requireProject);
-
+// app.use('/api/projects', projectSessionRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/compose', composeRoutes);
 app.use('/api/dockerhub', dockerhubRoutes);
