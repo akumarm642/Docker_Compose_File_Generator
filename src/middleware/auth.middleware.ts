@@ -13,8 +13,8 @@ export const requireAuth = (req: AuthRequest, res: Response, next: NextFunction)
     if(!token) return res.status(401).json({ message: 'No auth token provided'});
 
      try{
-        const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
-        req.userId = decoded.userId;
+        const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+        req.userId = decoded.id;
         next();
      } catch(err) {
         return res.status(403).json({ message: 'Invalid Token' });

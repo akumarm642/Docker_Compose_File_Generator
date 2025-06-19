@@ -8,12 +8,18 @@ const userRepo = AppDataSource.getRepository(User);
 
 //GET /project
 export const getProject = async (req: Request & { userId?: string }, res: Response) => {
+    if (!req.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     const project = await projectRepo.find({
-        where: { user: {id: req.userId} }, 
-        order: { updatedAt: 'DESC'}
+        where: { user: { id: req.userId } }, 
+        order: { updatedAt: 'DESC' }
     });
+
     res.json(project);
-}
+};
+
 
 //POST /project
 export const createProject = async ( req: Request & { userId?: string }, res: Response) => {
@@ -21,7 +27,6 @@ export const createProject = async ( req: Request & { userId?: string }, res: Re
     const user = await userRepo.findOneBy( {id: req.userId});
 
     if(!user) return res.status(404).json({ message: "User not found" });
-
     const project = projectRepo.create({ name, description, user, status: 'active' });
     await projectRepo.save(project);
     res.status(201).json(project);
