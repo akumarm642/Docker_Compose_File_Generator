@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import axios from 'axios';
 
-const API_KEY = 'AIzaSyBCc3G6JWYYmHEhClSRPNsDygroh90NEng';
+const API_KEY = process.env.API_KEY;
+console.log(API_KEY);
 const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
 
 

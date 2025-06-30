@@ -44,10 +44,10 @@ AppDataSource.initialize()
 app.use('/api/auth', authRoutes);
 app.use(requireAuth);
 
+app.use('/api', requireProject);
 
-app.use(requireProject);
 // app.use('/api/projects', projectSessionRoutes);
-app.use('/api/projects', projectRoutes);
+app.use('/projects', projectRoutes);
 app.use('/api/compose', composeRoutes);
 app.use('/api/dockerhub', dockerhubRoutes);
 

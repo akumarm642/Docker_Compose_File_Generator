@@ -20,7 +20,7 @@ const router = Router();
 router.use(requireAuth);
 /**
  * @swagger
- * /api/projects:
+ * /projects:
  *   get:
  *     summary: Get all projects for the logged-in user
  *     tags: [Projects]
@@ -44,7 +44,7 @@ router.use(requireAuth);
 
 /**
  * @swagger
- * /api/projects:
+ * /projects:
  *   post:
  *     summary: Create a new project
  *     tags: [Projects]
@@ -81,7 +81,7 @@ router.use(requireAuth);
 
 /**
  * @swagger
- * /api/projects/{id}:
+ * /projects/{id}:
  *   put:
  *     summary: Update an existing project
  *     tags: [Projects]
@@ -124,7 +124,7 @@ router.use(requireAuth);
 
 /**
  * @swagger
- * /api/projects/{id}:
+ * /projects/{id}:
  *   delete:
  *     summary: Delete a project
  *     tags: [Projects]
@@ -151,7 +151,7 @@ router.delete('/:id', deleteProject);
 
 /**
  * @swagger
- * /api/projects/select:
+ * /projects/select:
  *   post:
  *     summary: Select a project for the session
  *     description: Sets the current selected project for the user's session.
