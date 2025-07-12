@@ -19,7 +19,6 @@ app.use(cors({
 }))
 
 app.use(cookieParser());
-
 setupSwagger(app);
 
 // app.use(express.json());
