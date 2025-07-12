@@ -5,8 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn src/server.ts",
-    "debug": "node --inspect-brk -r ts-node/register src/app.ts"
-  },
+    "debug": "node --inspect-brk -r ts-node/register src/app.ts",
+    "build": "tsc"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",

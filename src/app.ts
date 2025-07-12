@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from "path";
 import { AppDataSource } from './data-source';
 import authRoutes from './routes/auth.routes'; 
 import projectRoutes from './routes/project.routes';
@@ -13,7 +14,7 @@ import { setupSwagger } from './swagger'; // adjust path as needed
 export const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'http://localhost:8080',
   credentials: true,
 }))
 
