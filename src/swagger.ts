@@ -2,6 +2,8 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Express } from 'express';
 
+const swaggerBaseUrl = process.env.SWAGGER_BASE_URL || '/';
+
 const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
@@ -12,7 +14,7 @@ const options: swaggerJsdoc.Options = {
     },
     servers: [
       {
-        url: 'http://localhost:8888', // Replace if needed
+        url: swaggerBaseUrl, // ✅ Relative to current host (works for localhost + production)
       },
     ],
     components: {
@@ -20,7 +22,7 @@ const options: swaggerJsdoc.Options = {
         cookieAuth: {
           type: 'apiKey',
           in: 'cookie',
-          name: 'token', // Use the exact cookie name you're using for the JWT
+          name: 'token',
         },
       },
     },
@@ -30,7 +32,7 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./src/routes/*.ts'], // Adjust this path to your route files
+  apis: ['./dist/routes/*.js'], // Adjust this path if needed
 };
 
 const swaggerSpec = swaggerJsdoc(options);

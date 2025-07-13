@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import path from "path";
 import { AppDataSource } from './data-source';
 import authRoutes from './routes/auth.routes'; 
 import projectRoutes from './routes/project.routes';
@@ -42,7 +41,7 @@ app.use((req, res, next) => {
 // });
 
 const MAX_RETRIES = 10;
-const RETRY_DELAY_MS = 3000;
+const RETRY_DELAY_MS = 30000;
 
 async function connectWithRetry() {
   let retries = 0;
