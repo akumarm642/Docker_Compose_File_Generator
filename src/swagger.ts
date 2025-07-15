@@ -25,6 +25,29 @@ const options: swaggerJsdoc.Options = {
           name: 'token',
         },
       },
+      schemas: {
+        DockerImage: {
+          type: 'object',
+          properties: {
+            name: {
+              type: 'string',
+              example: 'nginx',
+            },
+            description: {
+              type: 'string',
+              example: 'Official Nginx image',
+            },
+            stars: {
+              type: 'number',
+              example: 10000,
+            },
+            pulls: {
+              type: 'number',
+              example: 5000000,
+            },
+          },
+        },
+      },
     },
     security: [
       {
@@ -32,7 +55,7 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./dist/routes/*.js'], // Adjust this path if needed
+  apis: ['./dist/swagger/*.js'], // Adjust if using ts-node: ['./src/swagger/*.ts']
 };
 
 const swaggerSpec = swaggerJsdoc(options);
