@@ -64,6 +64,9 @@ export const checkAuthStatus = (req:Request, res:Response) => {
         const token = req.cookies.token;
         const projectToken = req.cookies.projectId
 
+        console.log("token", token);
+        console.log("Project token", projectToken)
+
         if(!token){
             return res.status(401).json({ loggedIn: false, message: 'No token provided'});
         }
