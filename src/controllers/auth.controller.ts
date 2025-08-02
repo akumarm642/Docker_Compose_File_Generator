@@ -71,6 +71,9 @@ export const checkAuthStatus = (req:Request, res:Response) => {
             return res.status(401).json({ loggedIn: false, message: 'No token provided'});
         }
 
+        if(!projectToken){
+            return res.status(401).json({loggedIn: true, message: 'Project Not selected'});
+        }
         const decodedUser = jwt.verify(token, JWT_SECRET) as { id: string };
 
         let decodedProject = null;
